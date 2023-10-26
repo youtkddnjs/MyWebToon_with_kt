@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My WebToon</string>
+    <string name="backtolast">마지막 시점 돌아가기</string>
+    <string name="changetabname">탭 이름 변경</string>
 </resources>
