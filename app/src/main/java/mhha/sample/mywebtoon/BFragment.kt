@@ -18,4 +18,6 @@ class BFragment : Fragment() {
         binding = FragmentSecondBinding.inflate(inflater)
         return binding.root
     }//override fun onCreateView
+
+
 } //class BFragment : Fragment()

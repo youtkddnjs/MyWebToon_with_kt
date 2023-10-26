@@ -1,42 +1,60 @@
 package mhha.sample.mywebtoon
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
 import android.webkit.WebViewClient
+import android.widget.TextView
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayoutMediator
 import mhha.sample.mywebtoon.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+
     private lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val container = binding.fragmentContainer
 
-        binding.button01.setOnClickListener{
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentContainer, WebViewFragment())
-                commit()
+
+        binding.viewpager2.adapter = ViewPagerAdapter(this)
+
+        TabLayoutMediator(binding.tabLayout, binding.viewpager2){tab, position ->
+            run{
+                val textView = TextView(this@MainActivity)
+                textView.text = "postion $position"
+                textView.gravity = Gravity.CENTER
+                tab.customView = textView
             }
-        }//binding.button01.setOnClickListener
-        binding.button02.setOnClickListener{
-            supportFragmentManager.beginTransaction().apply {
-                replace(R.id.fragmentContainer, BFragment())
-                commit()
-            }
-        }//binding.button02.setOnClickListener
+        }.attach()//TabLayoutMediator(binding.tabLayout, binding.viewpager2){tab, position ->
+
+
+        this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                val currentFrgment = supportFragmentManager.fragments[binding.viewpager2.currentItem]
+                if(currentFrgment is WebViewFragment) {
+                    if ( currentFrgment.cangoback() ){
+                        currentFrgment.goback()
+                    } else{
+                        finish()
+                    }
+                }else {
+                    finish()
+                }//if(currentFrgment is WebViewFragment)
+            }//override fun handleOnBackPressed()
+        }) //this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true)
+
     } //override fun onCreate(savedInstanceState: Bundle?)
 
 
-
-    //뒤로가기 버튼 구현
-//    override fun onBackPressed() {
-//        var currentFragment = supportFragmentManager.fragments.first()
-//        if( currentFragment is WebViewFragment){
-//            if(currentFragment.goToBack()){currentFragment.goBack()}else{ super.onBackPressed()}
-//        }else{super.onBackPressed()}
-//    } //override fun onBackPressed()
 
 } //class MainActivity : AppCompatActivity()

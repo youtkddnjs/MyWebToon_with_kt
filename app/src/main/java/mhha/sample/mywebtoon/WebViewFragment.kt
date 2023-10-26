@@ -2,6 +2,7 @@ package mhha.sample.mywebtoon
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,26 +31,15 @@ class WebViewFragment : Fragment() {
         binding.webview.loadUrl("https://comic.naver.com/")
     }
 
-    //뒤로가기 버튼 구현 new
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback = object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                if(binding.webview.canGoBack()){binding.webview.goBack()}else{System.exit(0)}
-            }//override fun handleOnBackPressed()
-        }//OnBackPressedCallback
-        requireActivity().onBackPressedDispatcher.addCallback(this,callback)
-    }//override fun onAttach(context: Context)
-
 
     //뒤로가기 버튼 구현
-//    fun goToBack():Boolean{
-//        return binding.webview.canGoBack()
-//    }
-//
-//    fun goBack(){
-//        return binding.webview.goBack()
-//    }
+    fun cangoback():Boolean{
+        return binding.webview.canGoBack()
+    }
+
+    fun goback(){
+        return binding.webview.goBack()
+    }
 
 
 }//class WebViewFragment : Fragment()
