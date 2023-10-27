@@ -9,10 +9,19 @@ import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 
-class WebtoonWebViewClient(private val grogressbar : ProgressBar) : WebViewClient() {
+class WebtoonWebViewClient(
+    private val grogressbar : ProgressBar,
+    private val savaData : (String) -> Unit,
+    ) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
         Log.d("webview", "${request?.url}")
+
+        if(request != null && request.url.toString().contains("detail")){
+            savaData.invoke(request.url.toString())
+        }
+
+
         return super.shouldOverrideUrlLoading(view, request)
     }//override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean
 

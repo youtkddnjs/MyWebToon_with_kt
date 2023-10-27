@@ -11,9 +11,9 @@ class ViewPagerAdapter(private val mainActivity: MainActivity) : FragmentStateAd
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0 -> { return WebViewFragment()}
-            1 -> {return BFragment()}
-            else -> {return WebViewFragment()}
+            0 -> { return WebViewFragment(position)}
+            1 -> {return WebViewFragment(position)}
+            else -> {return WebViewFragment(position)}
         }//return when(position)
     }//override fun createFragment(position: Int): Fragment
 

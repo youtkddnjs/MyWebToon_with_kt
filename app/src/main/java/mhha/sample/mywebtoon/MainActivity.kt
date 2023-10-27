@@ -24,10 +24,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
+        //ViewPager 연결
         binding.viewpager2.adapter = ViewPagerAdapter(this)
 
+        //TabLayout 연결
         TabLayoutMediator(binding.tabLayout, binding.viewpager2){tab, position ->
             run{
                 val textView = TextView(this@MainActivity)
@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
         }.attach()//TabLayoutMediator(binding.tabLayout, binding.viewpager2){tab, position ->
 
 
+
+        //뒤로가기 버튼
         this.onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
                 val currentFrgment = supportFragmentManager.fragments[binding.viewpager2.currentItem]
