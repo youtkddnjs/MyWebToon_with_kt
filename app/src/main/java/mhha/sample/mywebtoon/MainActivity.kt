@@ -1,5 +1,6 @@
 package mhha.sample.mywebtoon
 
+import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,8 +14,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import mhha.sample.mywebtoon.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity() , TabName {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -27,13 +27,27 @@ class MainActivity : AppCompatActivity() {
         //ViewPager 연결
         binding.viewpager2.adapter = ViewPagerAdapter(this)
 
+        val sharedPreference = getSharedPreferences("WEB_HISTORY", Context.MODE_PRIVATE )
+        val tab0 = sharedPreference?.getString("tab0_name", "무제")
+        val tab1 = sharedPreference?.getString("tab1_name", "무제")
+        val tab2 = sharedPreference?.getString("tab2_name", "무제")
         //TabLayout 연결
         TabLayoutMediator(binding.tabLayout, binding.viewpager2){tab, position ->
             run{
-                val textView = TextView(this@MainActivity)
-                textView.text = "postion $position"
-                textView.gravity = Gravity.CENTER
-                tab.customView = textView
+                // 탭이름 변경 방법 1
+//                val textView = TextView(this@MainActivity)
+//                textView.text = "무제-$position"
+//                textView.gravity = Gravity.CENTER
+//                tab.customView = textView
+
+                // 탭이름 변경 방법 2
+//                tab.text = when(position){
+//                    0-> tab0
+//                    1-> tab1
+//                    2-> tab2
+//                    else -> "무제"
+//                }
+
             }
         }.attach()//TabLayoutMediator(binding.tabLayout, binding.viewpager2){tab, position ->
 
@@ -57,6 +71,16 @@ class MainActivity : AppCompatActivity() {
 
     } //override fun onCreate(savedInstanceState: Bundle?)
 
+    override fun nameChanged(posistion: Int, name: String) {
+        Log.d("changedName", "$name")
+        val tab = binding.tabLayout.getTabAt(posistion)
+        //탭이름 방법 1
+//        val textview = TextView(this@MainActivity)
+//        textview.text = name
+//        textview.gravity = Gravity.CENTER
+//        tab?.customView = textview
+        //탭이름 변경 방법 2
+        tab?.text = name
+    }//override fun nameChanged(posistion: Int, name: String)
 
-
-} //class MainActivity : AppCompatActivity()
+}  //class MainActivity : AppCompatActivity()

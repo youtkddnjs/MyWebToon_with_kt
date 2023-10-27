@@ -1,5 +1,6 @@
 package mhha.sample.mywebtoon
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import android.widget.EditText
 import android.widget.Toast
 import android.window.OnBackAnimationCallback
 import androidx.activity.OnBackPressedCallback
@@ -14,8 +16,10 @@ import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import mhha.sample.mywebtoon.databinding.FragmentWebviewBinding
 
-class WebViewFragment( private val posistion : Int) : Fragment() {
+class WebViewFragment( private val posistion : Int, private val weburl : String) : Fragment() {
     private lateinit var binding : FragmentWebviewBinding
+    // 이름 변경 될 때 듣는 리스너 인터페이스
+    var listener: TabName? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +40,7 @@ class WebViewFragment( private val posistion : Int) : Fragment() {
             }
         }//binding.webview.webViewClient = WebtoonWebViewClient
         binding.webview.settings.javaScriptEnabled = true
-        binding.webview.loadUrl("https://comic.naver.com/")
+        binding.webview.loadUrl(weburl)
 
         binding.backTOLastButton.setOnClickListener{
             val sharedPreference = activity?.getSharedPreferences("WEB_HISTORY",Context.MODE_PRIVATE)
@@ -46,8 +50,25 @@ class WebViewFragment( private val posistion : Int) : Fragment() {
             }else{
                 binding.webview.loadUrl(webUrl)
             }
-
         }//binding.backTOLastButton.setOnClickListener
+
+        binding.changeTabNameButton.setOnClickListener{
+            val dialog = AlertDialog.Builder(context)
+            val editText = EditText(context)
+
+            dialog.setView(editText)
+            dialog.setPositiveButton("저장"){ _ , _ ->
+                activity?.getSharedPreferences("WEB_HISTORY", Context.MODE_PRIVATE )?.edit{
+                    putString("tab${posistion}_name", editText.text.toString())
+                    listener?.nameChanged(posistion, editText.text.toString())
+                }
+            }
+            dialog.setNegativeButton("취소"){ text, listener ->
+                text.cancel()
+            }
+            dialog.show()
+        }//binding.changeTabNameButton.setOnClickListener
+
     }//override fun onViewCreated(view: View, savedInstanceState: Bundle?)
 
 
@@ -62,3 +83,7 @@ class WebViewFragment( private val posistion : Int) : Fragment() {
 
 
 }//class WebViewFragment : Fragment()
+
+interface TabName{
+    fun nameChanged(posistion: Int,name : String)
+}
